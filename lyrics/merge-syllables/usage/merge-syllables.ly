@@ -1,6 +1,7 @@
 \version "2.18.0"
 
-\include "./definitions.ily"
+\include "oll-core/package.ily"
+\loadModule oll-misc.lyrics.merge-syllables
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% EXAMPLES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
