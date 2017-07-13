@@ -1,8 +1,7 @@
 \version "2.17.25"
 
 \include "oll-core/package.ily"
-\loadModule snippets.input-shorthands.articulations-not-aligned-with-notes
-%\include "./definitions.ily"
+\loadModule oll-misc.time.at
 
 % examples:
 
