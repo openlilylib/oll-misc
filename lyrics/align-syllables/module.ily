@@ -24,6 +24,10 @@
 %   THE SNIPPET   %
 %%%%%%%%%%%%%%%%%%%
 
+align = \once \override Lyrics.LyricText #'aligned = ##t
+
+
+
 % Thw following function is taken from `scm/define-grob-properties.scm'.  We apply it
 % to the new properties so LilyPond won't complain about the use of undocumented
 % properties.
@@ -41,13 +45,13 @@
     (apply define-grob-property x))
 
   `(
-    (tagged ,boolean? "is this grob marked?")
+    (aligned ,boolean? "is this grob aligned?")
     (syllables ,array? "the lyric syllables at a timestep")
     ))
 
 
 #(define (Lyric_text_align_engraver ctx)
-  "If the property 'tagged is set, collect all lyric syllables at that
+  "If the property 'aligned is set, collect all lyric syllables at that
 timestep in the grob-array 'syllables"
   (let (; We will collect LyricText items here.
         (syl '()))
@@ -58,9 +62,9 @@ timestep in the grob-array 'syllables"
         ((stop-translation-timestep trans)
          ; This ensures that callbacks will have access to all of the LyricText grobs
          ; in a column though any of the LyricText grobs in that column.
-         (if (any (lambda (x) (eq? #t (ly:grob-property x 'tagged)))
+         (if (any (lambda (x) (eq? #t (ly:grob-property x 'aligned)))
                   syl)
-             (for-each (lambda (x) 
+             (for-each (lambda (x)
                          (for-each
                            (lambda (y)
                              (ly:pointer-group-interface::add-grob x 'syllables y))
@@ -73,13 +77,13 @@ timestep in the grob-array 'syllables"
   (let* (; This is the grob-array we created to hold targeted syllables.
          (target (ly:grob-object grob 'syllables))
          ; Check is necessary because engraver has only created 'syllables
-         ; grob-array in response to tag 
+         ; grob-array in response to tag
          (target
            (if (ly:grob-array? target)
                (ly:grob-array->list target)
                '()))
          ; A procedure to determine the size of a text stencil:
-         (length (lambda (item) 
+         (length (lambda (item)
                    (interval-length
                      (ly:stencil-extent
                         (grob-interpret-markup grob (ly:grob-property item 'text))
@@ -97,6 +101,21 @@ timestep in the grob-array 'syllables"
               (ly:self-alignment-interface::aligned-on-x-parent grob)
               ; Otherwise, give it the X-offset value of the longest syllable.
               (ly:grob-property longest 'X-offset)))
-        
+
         ; If no grob-array, return the default function for 'X-offset
         (ly:self-alignment-interface::aligned-on-x-parent grob))))
+
+
+% Automatically activate the engraver upon module loading
+
+\layout {
+  \context {
+    \Lyrics
+    \override LyricText #'X-offset = #X-offset-callback
+  }
+  \context {
+    \Score
+    \consists #Lyric_text_align_engraver
+  }
+}
+

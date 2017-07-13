@@ -1,8 +1,7 @@
 \version "2.16.2"
 
 \include "oll-core/package.ily"
-\loadModule snippets.notation-snippets.aligning-first-lyric-syllables
-%\include "definitions.ily"
+\loadModule oll-misc.lyrics.align-syllables
 
 %%%%%%%%%%%%%%%%%%%%%
 %   USAGE EXAMPLE   %
@@ -10,18 +9,9 @@
 
 % a shorthand for tagging:
 
-tagIt = \once \override Lyrics.LyricText #'tagged = ##t
 
 \layout {
   ragged-right = ##f
-  \context {
-    \Lyrics
-    \override LyricText #'X-offset = #X-offset-callback
-  }
-  \context {
-    \Score
-    \consists #Lyric_text_align_engraver
-  }
 }
 
 \score {
@@ -32,7 +22,7 @@ tagIt = \once \override Lyrics.LyricText #'tagged = ##t
       }
     }
     \new Lyrics \lyricsto A {
-      \tagIt Do -- mi -- nus,
+      \align Do -- mi -- nus,
     }
 
     \new Lyrics \lyricsto A {
