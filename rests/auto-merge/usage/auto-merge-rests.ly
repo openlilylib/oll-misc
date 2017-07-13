@@ -1,8 +1,7 @@
 \version "2.18.2"
 
 \include "oll-core/package.ily"
-\loadModule snippets.editorial-tools.merge-rests-engraver
-%\include "definition.ily"
+\loadModule oll-misc.rests.auto-merge
 
 \score
 {
@@ -23,10 +22,6 @@
       r2 r4 c |
     }
   >>
-  \layout {
-    \context { \Staff \consists #merge-rests-engraver } % merges non-whole rests
-    \context { \Staff \consists #merge-mmrests-engraver } % merges whole rests
-  }
 }
 
 \score

@@ -69,3 +69,8 @@
                                (if (eq? 'MultiMeasureRest (assoc-ref
                                                            (ly:grob-property grob 'meta) 'name))
                                    (set! curr-rests (cons grob curr-rests))))))))))
+
+\layout {
+  \context { \Staff \consists #merge-rests-engraver } % merges non-whole rests
+  \context { \Staff \consists #merge-mmrests-engraver } % merges whole rests
+}
