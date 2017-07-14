@@ -1,8 +1,7 @@
 \version "2.19.59"
 
 \include "oll-core/package.ily"
-\loadModule snippets.notation-snippets.pedal-decorations
-%\include "./definitions.ily"
+\loadModule oll-misc.custom-elements.pedal-decorations
 
 % example usage
 pedalWithArrowsAndTextPed =
