@@ -13,7 +13,7 @@
   % is this snippet ready?  See meta/status-values.md
   status = "unfinished"
   %{
-    TODO: 
+    TODO:
     - Currently this only works for Slur/PhrasingSlur
       but it should work for any Grob that the operators
       can be applied to
@@ -39,8 +39,15 @@
               (dir (ly:event-property event 'direction)))
          (if (not (null? dir))
              (cond ((equal? dir 1)
-                    (set! (ly:grob-property grob 'color) 
+                    (set! (ly:grob-property grob 'color)
                           debug-direction-up-color))
                ((equal? dir -1)
-                    (set! (ly:grob-property grob 'color) 
+                    (set! (ly:grob-property grob 'color)
                           debug-direction-down-color)))))))))
+
+\layout {
+  \context {
+    \Voice
+    \consists #Color_explicit_direction_engraver
+  }
+}

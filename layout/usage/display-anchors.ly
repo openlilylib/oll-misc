@@ -1,8 +1,7 @@
 \version "2.16.2"
 
 \include "oll-core/package.ily"
-\loadModule snippets.debugging-layout.display-grob-anchors
-%\include "./definitions.ily"
+\loadModule oll-misc.layout.display.anchors
 
 mus =
 {

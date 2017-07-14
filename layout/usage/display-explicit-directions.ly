@@ -1,8 +1,8 @@
 \version "2.16.2"
 
 \include "oll-core/package.ily"
-\loadModule snippets.debugging-layout.color-voices-and-directions.display-directions
-%\include "./display-directions.ily"
+\loadModule oll-misc.layout.display.explicit-directions
+
 
 %%%%%%%%%%%%%%%%%%%%%
 % USAGE EXAMPLE(S): %
@@ -20,9 +20,3 @@
   c'~ c'^~ c'_~ c'
 }
 
-\layout {
-  \context {
-    \Voice
-    \consists #Color_explicit_direction_engraver
-  }
-}

@@ -1,10 +1,8 @@
 \version "2.16.2"
 
 \include "oll-core/package.ily"
-\loadModule snippets.debugging-layout.color-voices-and-directions.color-voices
-%\include "color-voices.ily"
+\loadModule oll-misc.layout.display.explicit-voices
 
-#(define debug-explicit-voice-two-color red)
 
 \relative g' {
   g a b c |

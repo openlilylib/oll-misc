@@ -1,4 +1,4 @@
-\version "2.17.22"
+\version "2.19.22"
 
 \header {
   snippet-title = "Displaying control points of bezier curves"
@@ -47,10 +47,6 @@
         (define debug-control-points-cross-size 0.7)))
 #(cond ((not (defined? 'debug-control-points-color))
         (define debug-control-points-color red)))
-
-% Note that this file (from /specific-solutions) has to be
-% present in your LilyPond search path too.
-\include "../specific-solutions/lilypond-version-switch.ly"
 
 #(define (make-cross-stencil coords cross-thickness arm-offset)
    ;; coords are the coordinates of the center of the cross
@@ -129,16 +125,16 @@
        (ly:stencil-add stil
         ;; add crosses:
         (ly:make-stencil
-         (ly:stencil-expr (stencil-with-color 
-                           cross-stencils 
+         (ly:stencil-expr (stencil-with-color
+                           cross-stencils
                            debug-control-points-color))
          empty-interval
          empty-interval)
 
          ;; add lines:
         (ly:make-stencil
-         (ly:stencil-expr (stencil-with-color 
-                           line-stencils 
+         (ly:stencil-expr (stencil-with-color
+                           line-stencils
                            debug-control-points-color))
          empty-interval
          empty-interval)
@@ -146,9 +142,6 @@
 
 % turn on displaying control-points:
 displayControlPoints = {
-  % Workaround for Tie issue in 2.17:
-  #(if (lilypond-greater-than? '(2 16 2))
-       #{ \override Tie #'vertical-skylines = #'() #})
   \override Slur #'stencil = #(display-control-points)
   \override PhrasingSlur #'stencil = #(display-control-points)
   \override Tie #'stencil = #(display-control-points)
@@ -156,45 +149,10 @@ displayControlPoints = {
   \override RepeatTie #'stencil = #(display-control-points)
 }
 
-%%%%%%%%%%%%%%%%%%%%%
-% USAGE EXAMPLE(S): %
-%%%%%%%%%%%%%%%%%%%%%
-
-
-\score {
-  \new Staff \relative c' {
-    c( d e\( d~ d1) g'4 a b f |
-    e\) d2\laissezVibrer r4 |
-    r c2.\repeatTie
-  }
-  \layout {
-    \displayControlPoints
-  }
+hideControlPoints = {
+  \revert Slur.stencil
+  \revert PhrasingSlur.stencil
+  \revert Tie.stencil
+  \revert LaissezVibrerTie.stencil
+  \revert RepeatTie.stencil
 }
-
-% This example show some individual uses of the commands
-\relative c' {
-%{
-  % configuring the appearance
-  #(define debug-control-points-color darkgreen)
-  #(define debug-control-points-cross-size 1.5)
-  #(define debug-control-points-line-thickness 0.2)
-%}
-
-  % only show the control points for the following curve
-  \once \displayControlPoints
-  c1~\ppp c
-  a''~^\ppp a
-  % Affects layout in 2.17!
-  g,1~ g
-  \override Tie #'stencil = #(display-control-points)
-  % bug-workaround for 2.17.x:
-  % \override Tie #'vertical-skylines = #'()
-  g1~ g
-  f,\(\ppp d\) 
-  \override PhrasingSlur #'stencil = #(display-control-points)
-  g'\(^\ppp e\)
-  f,\(\ppp d\) 
-  g'(^\ppp e)
-}
-%}

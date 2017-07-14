@@ -8,7 +8,7 @@
     commands so explicitly assigned voices are colored.
     *Before* the include directive the configuration
     variables can be modified to configure the appearance.
-    
+
     Please note that this debug mode doesn't behave well
     together with color-directions.ily
   }
@@ -39,7 +39,7 @@
 % here goes the snippet: %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-colorVoice = 
+colorVoice =
 #(define-music-function (parser location color)
    (color?)
    #{
