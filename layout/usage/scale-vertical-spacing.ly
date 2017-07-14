@@ -1,7 +1,7 @@
 \version "2.19.13"
 
 \include "oll-core/package.ily"
-\loadModule snippets.notation-snippets.scale-vertical-spacing
+\loadModule oll-misc.layout.vertical-spacing.scale
 % Necessary to prevent read-ahead issue
 #(display "")
 

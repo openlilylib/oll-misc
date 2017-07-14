@@ -1,7 +1,7 @@
 \version "2.16.2"
 
 \include "oll-core/package.ily"
-\loadModule oll-misc.layout.vertical-spacing
+\loadModule oll-misc.layout.vertical-spacing.easy-spacing
 
 \markup \bold \huge "Vertical Spacing"
 
