@@ -1,7 +1,7 @@
 \version "2.16.2"
 
 \include "oll-core/package.ily"
-\loadModule oll-misc.custom-elements.dynamic-text
+\loadModule oll-misc.custom-elements.dynamics.compound-text
 
 {
   c'1 \dynamic sfffzppppp
