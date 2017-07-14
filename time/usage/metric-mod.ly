@@ -1,7 +1,7 @@
 \version "2.17.26"
 
 \include "oll-core/package.ily"
-\loadModule snippets.notation-snippets.metricmod-function
+\loadModule oll-misc.time.metric-mod
 
 %%%%%%%%%%%%%%%%%%%%%
 % USAGE EXAMPLE(S): %
