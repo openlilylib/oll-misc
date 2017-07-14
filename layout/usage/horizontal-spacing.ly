@@ -1,8 +1,7 @@
 \version "2.16.2"
 
 \include "oll-core/package.ily"
-\loadModule snippets.notation-snippets.adjust-horizontal-spacing
-%\include "definitions.ily"
+\loadModule oll-misc.layout.horizontal-spacing
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 % usage example:         %
