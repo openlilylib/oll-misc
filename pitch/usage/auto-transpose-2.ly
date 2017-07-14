@@ -2,10 +2,11 @@
 \include "deutsch.ly"
 
 \include "oll-core/package.ily"
-\loadModule snippets.editorial-tools.auto-transpose
+\loadModule oll-misc.pitch.auto-transpose
+
+% TODO:
+% Make this properly work with the edition-engraver *package*
 \loadModule snippets.editorial-tools.edition-engraver
-%\include "editorial-tools/auto-transpose/definitions.ily"
-%\include "editorial-tools/edition-engraver/definitions.ily"
 
 % some music to insert into example
 bach = \relative c'' { b a c h }
