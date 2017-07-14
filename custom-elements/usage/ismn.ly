@@ -1,8 +1,7 @@
 \version "2.17.97"
 
 \include "oll-core/package.ily"
-\loadModule snippets.specific-solutions.ismn
-%\include "definitions.ily"
+\loadModule oll-misc.custom-elements.ismn
 
 %%%%%%%%%
 % Example
