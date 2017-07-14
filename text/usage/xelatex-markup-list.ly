@@ -1,7 +1,7 @@
 \version "2.18.0"
 \include "oll-core/package.ily"
-\loadModule snippets.specific-solutions.xelatex-markup-list
-%\include "definitions.ily"
+\loadModule oll-misc.text.xelatex-markup-list
+\loadModule oll-core.util.read-comment
 
 text = \readComment
 %{

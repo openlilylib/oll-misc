@@ -1,7 +1,5 @@
 \version "2.18.0"
 
-\loadModule snippets.general-tools.readComment
-
 \header {
   snippet-title = "xelatex-markup-list command"
   snippet-author = "Jan-Peter Voigt"
