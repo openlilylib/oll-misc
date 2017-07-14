@@ -1,6 +1,7 @@
 \version "2.16.2"
 
-\include "definitions.ily"
+\include "oll-core/package.ily"
+\loadModule oll-misc.custom-elements.easy-octaves
 
 \relative a' {
   r8 <d e> r B-"Foo" r <d e> r A( |
