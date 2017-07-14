@@ -1,13 +1,14 @@
 #
-# openLilyLib/snippets package metadata
+# openLilyLib/oll-misc package metadata
 #
 
-name: snippets
-display-name: openLilyLib Snippets
-short-description: Includable extension functionality for GNU LilyPond
+name: oll-misc
+display-name: Miscellaneous openLilyLib tools
+short-description: openLilyLib package with miscellaneous tools
 description: <
-  The `snippets` package is a loosely organized collection of code fragments
-  for use with the GNU LilyPond score writer.
+  The `oll-misc` package is a loosely organized collection of code fragments
+  for use with the GNU LilyPond score writer, depending on the openLilyLib
+  package infrastructure
   >
 oll-core: 0.5.0
 maintainers: [
@@ -15,5 +16,5 @@ maintainers: [
   ]
 version: 0.5.0
 license: GPL3
-website: https://github.com/openlilylib/snippets
-repository: https://github.com/openlilylib/snippets.git
+website: https://github.com/openlilylib/oll-misc
+repository: https://github.com/openlilylib/oll-misc.git
