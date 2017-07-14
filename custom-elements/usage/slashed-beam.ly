@@ -1,8 +1,7 @@
 \version "2.19.45"
 
 \include "oll-core/package.ily"
-\loadModule snippets.notation-snippets.slash-beam
-%\include "./definitions.ily"
+\loadModule oll-misc.custom-elements.slashed-beam
 
 \paper {
   ragged-right = ##t

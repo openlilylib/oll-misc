@@ -1,8 +1,7 @@
 \version "2.19.49"
 
 \include "oll-core/package.ily"
-\loadModule snippets.notation-snippets.slash-stem
-%\include "./definitions.ily"
+\loadModule oll-misc.custom-elements.slashed-stem
 
 \paper {
   ragged-right = ##t
