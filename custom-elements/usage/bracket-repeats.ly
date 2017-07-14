@@ -1,8 +1,7 @@
 \version "2.17.25"
 
 \include "oll-core/package.ily"
-\loadModule snippets.specific-solutions.bracket-repeats
-%\include "./definitions.ily"
+\loadModule oll-misc.custom-elements.bracket-repeats
 
 %%%%%%%%%%%%%%%%%%%%%
 %   USAGE EXAMPLE   %
