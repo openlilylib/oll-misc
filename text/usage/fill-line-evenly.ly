@@ -1,7 +1,6 @@
 
 \include "oll-core/package.ily"
-\loadModule snippets.notation-snippets.fill-line-evenly
-%\include "definitions.ily"
+\loadModule oll-misc.text.fill-line-evenly
 
 \markup \vspace #1
 \markup "\fill-line:"
