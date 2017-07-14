@@ -1,10 +1,10 @@
 \version "2.18.2"
 
 \include "oll-core/package.ily"
-\loadModule snippets.notation-snippets.alternating-time-signatures
+\loadModule oll-misc.time.alternating-metres
 
 \header {
-  title = "Alternating Time Signatures"
+  title = "Alternating Metres"
 }
 
 \markup "Using \\fractionList directly"
