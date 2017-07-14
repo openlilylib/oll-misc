@@ -1,8 +1,7 @@
 \version "2.17.29"
 
 \include "oll-core/package.ily"
-\loadModule snippets.notation-snippets.hairpin-with-text
-%\include "./definitions.ily"
+\loadModule oll-misc.custom-elements.dynamics.hairpin-with-text
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This example shows how <snippet-name> can be used.
