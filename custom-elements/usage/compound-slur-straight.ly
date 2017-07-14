@@ -1,9 +1,7 @@
 \version "2.19.48"
 
 \include "oll-core/package.ily"
-\loadModule snippets.notation-snippets.compound-slurs
-%\include "compound-slurs.ily"
-
+\loadModule oll-misc.custom-elements.compound-slurs
 
 \paper {
   indent = 0
@@ -22,7 +20,7 @@ straight =
 ^\compoundSlur \with {
 %  annotate = ##t
   %show-grid = ##t
-  
+
   start-angle = 60
   end-angle = 60
   start-ratio = 0.25
@@ -33,7 +31,7 @@ straight =
      (ratio-left . .5)
      (angle . straight)
      )
-  
+
 
   inflection =
   #'((X-ratio . .5)
