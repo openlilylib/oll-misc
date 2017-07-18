@@ -1,7 +1,5 @@
 \version "2.18.2"
 
-\include "../../general-tools/lilypond-version-predicates/definitions.ily"
-
 \header {
   snippet-title = "Print (irregularly) changing meters"
   snippet-author = "Urs Liska, Peter Bjuhr"
