@@ -197,14 +197,17 @@ is reached the letter is doubled, then tripled, and so on."
          counter))))
 
 #(define (check-list-styles style-list)
-   "Check whether the outline style includes valid keywords only."
-   (every
+   "Filter out invalid keywords from style-list.
+    This may cause follow-up errors or unwanted behaviour."
+   (filter
     (lambda (elt)
       (let
        ((match (memq elt outline-counter-styles)))
        (if (not match)
-           (oll:warn "Invalid outline numbering style (expect errors): ~a" elt))
-       match))
+           (begin
+            (oll:warn "Invalid outline numbering style (expect possible follow-up errors): ~a" elt)
+            #f)
+           elt)))
     style-list))
 
 #(define counters (make-hash-table))
@@ -215,8 +218,8 @@ createOutline =
    "Make an outline counter. Give it a name - a symbol.
     The creation function stores the name of the counter procedure in
     a global hash table, with its associated counter class."
-   (check-list-styles list-styles)
-   (hashq-set! counters name (make-outline-counter list-styles)))
+   (let ((list-styles (check-list-styles list-styles)))
+     (hashq-set! counters name (make-outline-counter list-styles))))
 
 #(define-markup-command (inc layout props name)
    (symbol?)
