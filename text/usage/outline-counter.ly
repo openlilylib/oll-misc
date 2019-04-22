@@ -78,7 +78,7 @@
   \vspace #1
   { "The example uses the following to create the list:" }
   \vspace #0.5
-  { \typewriter "\createOutline #'outline #'(number alpha-upper roman-lower number number)"  }
+  { \typewriter "\createOutline outline number.alpha-upper.roman-lower.number.number"  }
   \vspace #1
   \justified-lines {
     { \typewriter "\inc <name>" }

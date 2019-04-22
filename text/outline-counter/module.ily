@@ -157,7 +157,6 @@ is reached the letter is doubled, then tripled, and so on."
                (let loop((i 0))
                  (if (< i (length list-styles))
                      (begin
-                      (format #t "~a\n" i)
                       (vector-set! lst i (((vector-ref styles i) 'reset)))
                       (loop (1+ i)))
                      )
