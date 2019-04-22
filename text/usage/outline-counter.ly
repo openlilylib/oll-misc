@@ -132,10 +132,10 @@
 
 %=====================
 % create outline counter. give it a name and a list of level styles.
-\createOutline #'outline #'(number alpha-upper roman-lower number number)
+\createOutline outline number.alpha-upper.roman-lower.number.number
 
 % create a separate one
-\createOutline #'outline-b #'(number number number)
+\createOutline outline-b number.number.number
 
 % demonstrate various usage
 \markup { \inc #'outline \bold "Lorem ipsum" }
