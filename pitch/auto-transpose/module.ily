@@ -1,4 +1,4 @@
-\version "2.18.2"
+\version "2.19.7"
 
 \header {
   snippet-title = "auto-transpose"
@@ -44,7 +44,7 @@ autoTransposeEngraver =
        (let ((mcp (ly:context-property context 'music-concert-pitch)) ; music is in concert-pitch t/f
               (pcp (ly:context-property context 'print-concert-pitch)) ; print it in concert-pitch t/f
               (transp (ly:context-property context 'instrumentTransposition)) ; instrument transposition
-              (keysig (ly:context-property context 'keySignature)) ; key-signature
+              (keysig (ly:context-property context 'keyAlterations)) ; key-signature
               (tonic (ly:context-property context 'tonic))) ; key-signature tonic
 
          (define (do-transp m)
@@ -67,7 +67,7 @@ autoTransposeEngraver =
                  (if (ly:pitch? ap)
                      (begin
                      (ly:music-transpose m (ly:pitch-diff base tp))
-                     ))) % TODO
+                     ))) ; TODO
              (ly:music-set-property! m 'auto-transpose tp)
              ))
 
