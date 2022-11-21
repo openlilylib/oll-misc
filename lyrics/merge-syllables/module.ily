@@ -1,4 +1,4 @@
-\version "2.18.0" % absolutely necessary!
+\version "2.23.80" % absolutely necessary!
 
 \header {
   snippet-title = "Magnetic snapping lyric syllables"
@@ -77,6 +77,7 @@
   'LyricWord
   `(;(stencil . ,ly:lyric-word::print)
      (meta . ((class . Spanner)
+              (classes . (Spanner))
               (interfaces . (lyric-hyphen-interface
                              lyric-word-interface
                              text-interface))))))

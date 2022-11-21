@@ -1,4 +1,4 @@
-\version "2.18.0"
+\version "2.23.80"
 
 \include "oll-core/package.ily"
 \loadModule oll-misc.lyrics.merge-syllables
