@@ -1,4 +1,4 @@
-\version "2.16.2"
+\version "2.23.80"
 
 \include "oll-core/package.ily"
 \loadModule oll-misc.lyrics.align-syllables

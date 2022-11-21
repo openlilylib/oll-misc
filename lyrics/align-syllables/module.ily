@@ -1,4 +1,4 @@
-\version "2.16.2"
+\version "2.23.80"
 
 \header {
   snippet-title = "Aligning first lyric syllables in each system together"
@@ -24,7 +24,7 @@
 %   THE SNIPPET   %
 %%%%%%%%%%%%%%%%%%%
 
-align = \once \override Lyrics.LyricText #'aligned = ##t
+align = \once \override Lyrics.LyricText.aligned = ##t
 
 
 
@@ -111,7 +111,7 @@ timestep in the grob-array 'syllables"
 \layout {
   \context {
     \Lyrics
-    \override LyricText #'X-offset = #X-offset-callback
+    \override LyricText.X-offset = #X-offset-callback
   }
   \context {
     \Score
