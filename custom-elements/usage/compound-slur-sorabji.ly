@@ -18,7 +18,7 @@
 \header {
   title = "from: “Opus Clavicembalisticum”"
   subtitle = "after: http://homes.soic.indiana.edu/donbyrd/InterestingMusicNotation.html"
-  composer = "Kaikhosru Sorabij"
+  composer = "Kaikhosru Sorabji"
   opus = "(1930)"
 }
 
