@@ -1,4 +1,4 @@
-\version "2.16.2"
+\version "2.23.80"
 
 \header {
   snippet-title = "Interval Brackets for Scales"
@@ -76,37 +76,37 @@
    (elbowed-glissando '((0 . -0.35) (0.5 . -0.7) (1.0 . -0.2) (1.0 . 0.15))))
 
 intervalBracketsOn = {
-  \override Glissando #'Y-offset = #-1
-  \override Glissando #'thickness = #0.2
-  \override Glissando #'bound-details =
+  \override Glissando.Y-offset = #-1
+  \override Glissando.thickness = #0.2
+  \override Glissando.bound-details =
   #'((left    (padding . 0.2))
      (right   (end-on-accidental . #f) (padding . 0.2)))
 }
 
 intervalBracketsOff = {
-  \revert Glissando #'Y-offset
-  \revert Glissando #'thickness
-  \revert Glissando #'bound-details
+  \revert Glissando.Y-offset
+  \revert Glissando.thickness
+  \revert Glissando.bound-details
 }
 
 
 semiTone =
-#(define-event-function (parser location)()
+#(define-event-function ()()
    #{
-     \tweak #'stencil #semi-tone-gliss
+     \tweak stencil #semi-tone-gliss
      \glissando
    #})
 
 tone =
-#(define-event-function (parser location)()
+#(define-event-function ()()
    #{
-     \tweak #'stencil #tone-gliss
+     \tweak stencil #tone-gliss
      \glissando
    #})
 
 threeSemiTone =
-#(define-event-function (parser location)()
+#(define-event-function ()()
    #{
-     \tweak #'stencil #three-semi-tone-gliss
+     \tweak stencil #three-semi-tone-gliss
      \glissando
    #})
