@@ -1,12 +1,9 @@
-\version "2.18.2"
+\version "2.23.80"
 \include "deutsch.ly"
 
 \include "oll-core/package.ily"
+\loadPackage edition-engraver
 \loadModule oll-misc.pitch.auto-transpose
-
-% TODO:
-% Make this properly work with the edition-engraver *package*
-\loadModule snippets.editorial-tools.edition-engraver
 
 % some music to insert into example
 bach = \relative c'' { b a c h }
@@ -40,19 +37,25 @@ bach = \relative c'' { b a c h }
      (midiInstrument . "clarinet"))
 
 %%% create demo score
-
 \addEdition transp
+\consistToContexts #edition-engraver Staff
 \editionMod transp 2 0/1 switch.instrument.Staff.A \instrumentSwitch "b-clarinet"
 \editionMod transp 3 0/1 switch.instrument.Staff.A \instrumentSwitch "eb-clarinet"
 \editionMod transp 4 2/4 switch.instrument.Staff.A \instrumentSwitch "b-clarinet"
 \editionMod transp 5 0/4 switch.instrument.Staff.A \instrumentSwitch "concert-pitch"
 
-music = { $bach $bach $bach <>_"repeat unfold c''" \repeat unfold 4 c''4 <>_"repeat unfold d''" \repeat unfold 4 d'' }
+music = {
+  \repeat unfold 3 \bach
+  <>_\markup \tiny "repeat unfold c''"
+  \repeat unfold 4 c''4
+  <>_\markup \tiny "repeat unfold d''"
+  \repeat unfold 4 d''
+}
 global = { \key f \major s1 \key f \major s1 \key f \major s1 }
 \score {
   \new Staff \with {
     \autoTranspose
-    \consists \editionEngraver switch.instrument
+    \editionID ##f switch.instrument
   } \new Voice <<
     \global
     \music
