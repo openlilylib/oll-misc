@@ -1,4 +1,4 @@
-\version "2.16.2"
+\version "2.23.80"
 
 \header {
   snippet-title = "Displaying Grob Names of Objects"
@@ -27,17 +27,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Define appearance
-#(cond ((not (defined? 'debug-grob-name-color))
-        (define debug-grob-name-color darkcyan)))
+#(define debug-grob-name-color
+  (if (defined? 'debug-grob-name-color)
+   debug-grob-name-color darkcyan))
 % Which grobs to print the dot to?
 % Possible values:
 % - 'all-grobs
 % - Name of a grob (as symbol)
 % - List of grob names
-#(cond ((not (defined? 'debug-grob-name-groblist))
-        ;(define debug-grob-name-groblist '(NoteHead Stem))))
-        ;(define debug-grob-name-groblist 'NoteHead )))
-        (define debug-grob-name-groblist 'all-grobs)))
+#(define debug-grob-name-groblist
+  (if (defined? 'debug-grob-name-groblist)
+   debug-grob-name-groblist 'all-grobs))
 
 
 #(define (add-text)
@@ -86,12 +86,6 @@
                    (/ ref-text-stil-length 2)
                    X)))))))
 
-% needs to be here for 2.16.2
-#(define-public (symbol-list-or-symbol? x)
-   (if (list? x)
-       (every symbol? x)
-       (symbol? x)))
-
 #(define (add-grob-names l)
    ;; possible values for l:
    ;;   'all-grobs (adds text to all grobs, where possible)
@@ -123,16 +117,14 @@
                (loop (cdr x))))))))
 
 printGrobNames =
-#(define-music-function (parser location s-or-l)(symbol-list-or-symbol?)
-   "
-       Will add a red text to each (specified) grob's ref-point .
- Valid input for s-or-l:
+#(define-music-function
+  (s-or-l)
+  (symbol-list-or-symbol?)
+  "Will add a red text to each (specified) grob's ref-point.
+   Valid input for s-or-l:
       @code{'all-grobs}, (adds red-dots to all grobs, where possible), this will
           naturally cause collisions
       a single grob-name, must be a symbol,
       a list of grob-names.
- To avoid bleeding-overs any context has to be initiated explicitly.
-"
-#{
-  \applyContext #(add-grob-names s-or-l)
-#})
+  To avoid bleeding-overs any context has to be initiated explicitly."
+  #{ \applyContext #(add-grob-names s-or-l) #})
