@@ -1,4 +1,4 @@
-\version "2.19.60"
+\version "2.23.80"
 
 \include "oll-core/package.ily"
 \loadModule oll-misc.layout.display.control-points
@@ -13,7 +13,7 @@
     c( d e\( d~ d1) g'4 a b f |
     % locally hide and show control points
     \hideControlPoints
-    e\ ) d2 \laissezVibrer r4 |
+    e\) d2 \laissezVibrer r4 |
     \displayControlPoints
     r c2.\repeatTie
   }
@@ -28,14 +28,11 @@
   \once \displayControlPoints
   c1~\ppp c
   a''~^\ppp a
-  % Affects layout in 2.17!
   g,1~ g
-  \override Tie #'stencil = #(display-control-points)
-  % bug-workaround for 2.17.x:
-  % \override Tie #'vertical-skylines = #'()
+  \override Tie.stencil = #(display-control-points)
   g1~ g
   f,\(\ppp d\)
-  \override PhrasingSlur #'stencil = #(display-control-points)
+  \override PhrasingSlur.stencil = #(display-control-points)
   g'\(^\ppp e\)
   f,\(\ppp d\)
   g'(^\ppp e)
