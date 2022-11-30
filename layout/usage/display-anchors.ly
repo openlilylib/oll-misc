@@ -1,14 +1,14 @@
-\version "2.16.2"
+\version "2.23.80"
 
 \include "oll-core/package.ily"
 \loadModule oll-misc.layout.display.anchors
 
 mus =
 {
-  \override NoteHead #'style = #'altdefault
+  \override NoteHead.style = #'altdefault
   g'2->
   % Testing if \printRefpoint works with a custom-override.
-  \once \override Script #'stencil =
+  \once \override Script.stencil =
   #(lambda (grob)
      (ly:font-get-glyph (ly:grob-default-font grob) "scripts.coda"))
 
@@ -28,11 +28,11 @@ mus =
 
 \markup "Red dot added once to Script using \\onceDotScript"
 {
-  \override NoteHead #'style = #'altdefault
+  \override NoteHead.style = #'altdefault
   g'2->
   \onceDotScript
   % Testing if \printRefpoint works with a custom-override.
-  \once \override Script #'stencil =
+  \once \override Script.stencil =
   #(lambda (grob)
      (ly:font-get-glyph (ly:grob-default-font grob) "scripts.coda"))
   c''\fermata |

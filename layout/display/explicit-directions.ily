@@ -1,4 +1,4 @@
-\version "2.16.2"
+\version "2.23.80"
 
 \header {
   snippet-title = "Color grobs with explicit direction"
@@ -25,10 +25,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Define appearance:
-#(cond ((not (defined? 'debug-direction-up-color))
-        (define debug-direction-up-color red)))
-#(cond ((not (defined? 'debug-direction-down-color))
-        (define debug-direction-down-color blue)))
+#(define debug-direction-up-color
+  (if (defined? 'debug-direction-up-color)
+   debug-direction-up-color red))
+#(define debug-direction-down-color
+  (if (defined? 'debug-direction-down-color)
+   debug-direction-down-color blue))
 
 
 #(define (Color_explicit_direction_engraver ctx)

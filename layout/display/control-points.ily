@@ -1,4 +1,4 @@
-\version "2.19.22"
+\version "2.23.80"
 
 \header {
   snippet-title = "Displaying control points of bezier curves"
@@ -22,10 +22,6 @@
   status = "ready" % aiming for status "official"
   %{
     NOTE:
-    - Workaround for Tie formatting in 2.17 applied:
-      \override Tie #'vertical-skylines = #'()
-      through the use of 'lilypond-greater-than?' from
-      lilypond-version-switch.ly, which has to be present too.
     - Code for printing of 1st/4th CP and line 2nd-3rd CP is
       present but commented out.
   %}
@@ -41,12 +37,15 @@
 %#(define control-points-line-thickness 0.5)
 
 % Define appearance
-#(cond ((not (defined? 'debug-control-points-line-thickness))
-        (define debug-control-points-line-thickness 0.05)))
-#(cond ((not (defined? 'debug-control-points-cross-size))
-        (define debug-control-points-cross-size 0.7)))
-#(cond ((not (defined? 'debug-control-points-color))
-        (define debug-control-points-color red)))
+#(define debug-control-points-line-thickness
+  (if (defined? 'debug-control-points-line-thickness)
+   debug-control-points-line-thickness 0.05))
+#(define debug-control-points-cross-size
+  (if (defined? 'debug-control-points-cross-size)
+   debug-control-points-cross-size 0.7))
+#(define debug-control-points-color
+  (if (defined? 'debug-control-points-color)
+   debug-control-points-color red))
 
 #(define (make-cross-stencil coords cross-thickness arm-offset)
    ;; coords are the coordinates of the center of the cross
@@ -116,12 +115,6 @@
        ;; The order of adding the stencils will determine which stencil is printed
        ;; below or above, similar to 'layer
        ;; TODO: Is there consensus about it?
-       ;;
-       ;; Setting the added stencils to empty extents solves the tie-issue for 2.16.2
-       ;; but not for 2.17.x
-       ;; I think there's still something fishy with the skyline-code.
-       ;; Workaround: add \override Tie #'vertical-skylines = #'()
-       ;; as shown in the main function below.
        (ly:stencil-add stil
         ;; add crosses:
         (ly:make-stencil
@@ -142,11 +135,11 @@
 
 % turn on displaying control-points:
 displayControlPoints = {
-  \override Slur #'stencil = #(display-control-points)
-  \override PhrasingSlur #'stencil = #(display-control-points)
-  \override Tie #'stencil = #(display-control-points)
-  \override LaissezVibrerTie #'stencil = #(display-control-points)
-  \override RepeatTie #'stencil = #(display-control-points)
+  \override Slur.stencil = #(display-control-points)
+  \override PhrasingSlur.stencil = #(display-control-points)
+  \override Tie.stencil = #(display-control-points)
+  \override LaissezVibrerTie.stencil = #(display-control-points)
+  \override RepeatTie.stencil = #(display-control-points)
 }
 
 hideControlPoints = {

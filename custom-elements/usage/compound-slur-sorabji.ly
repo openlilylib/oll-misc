@@ -18,7 +18,7 @@
 \header {
   title = "from: “Opus Clavicembalisticum”"
   subtitle = "after: http://homes.soic.indiana.edu/donbyrd/InterestingMusicNotation.html"
-  composer = "Kaikhosru Sorabij"
+  composer = "Kaikhosru Sorabji"
   opus = "(1930)"
 }
 
@@ -115,7 +115,7 @@ voiceI = \relative b' {
     message = "First quaver is dotted in OE, so either the 10-tuplet must be 128th notes
 or the dot removed. However, horizontal alignment suggest that the dot on the first note is wrong"
   footnote-offset = #'(-1 . 3)
-  } NoteHead
+  }
   b8-- \mp [ \( \tuplet 10/8 {
     c64 _( d es d es d c b a b ]
   }
@@ -147,10 +147,8 @@ or the dot removed. However, horizontal alignment suggest that the dot on the fi
     author = "Urs Liska"
     message = "Accidental is missing but seems obvious."
     footnote-offset = #'(1 . -11)
-
   }
-  Accidental
-  e fis16.. a8 ) cis ]
+  e fis16.. a8 cis ]
 
   |
   \tuplet 5/4 {
@@ -158,11 +156,11 @@ or the dot removed. However, horizontal alignment suggest that the dot on the fi
   }
   \musicalIssue \with {
     author = "Urs Liska"
-    message = "OE prints double dotted eighth note. Either the additional dot is wrong 
+    message = "OE prints double dotted eighth note. Either the additional dot is wrong
 or the preceding group should be 128th notes. However, horizontal alignment with lower voice
 suggests our reading."
     footnote-offset = #'(0 . -1.2)
-  } NoteHead
+  }
   e8.
   \musicalIssue \with {
     author = "Urs Liska"
@@ -170,7 +168,7 @@ suggests our reading."
 following group should be 128th notes. However, horizontal alignment with lower voice
 suggests our reading."
     footnote-offset = #'(0.5 . -1.2)
-  } NoteHead
+  }
   d8 e64 d c d  es e d e \)
 
   |
@@ -208,7 +206,7 @@ voiceIII = \relative fis,, {
       author = "Urs Liska"
       message = "sic[!] a'."
       footnote-offset = #'(.5 . 5.5)
-    } NoteHead
+    }
     a fis'
   }
   \tuplet 3/2 {

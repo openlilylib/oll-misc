@@ -4,14 +4,16 @@
 [https://github.com/openlilylib](openLilyLib) family of LilyPond extension
 packages.
 
-`openLilyLib/oll-misc` is maintained by Urs Liska (`ul <at> openlilylib <dot>
-org`) and a number of contributors. If not specified otherwise any content in
-this repository is licensed under the GPL version 3 or later. For any
-information about usage feel free to post to the
+`openLilyLib/oll-misc` is maintained by a number of contributors. If not
+specified otherwise any content in this repository is licensed under the GPL
+version 3 or later. For any information about usage feel free to post to the
 [lilypond-user](https://lists.gnu.org/mailman/listinfo/lilypond-user) mailing
 list.
 
-This repository is based on a copy of the [openlilylib/snippets](https://github.com/openlilylib/snippets) repository, and it is **strongly recommended** to use `oll-misc` and the related openLilyLib *packages*, at least for new projects.
+This repository was originally based on a copy of the
+[openlilylib/snippets](https://github.com/openlilylib/snippets) repository, and
+it is **strongly recommended** to use `oll-misc` and the related openLilyLib
+_packages_, at least for new projects.
 
 ## Contents and Structure
 
@@ -20,7 +22,6 @@ tools, whose outline is expressed through the directory/module structure. So far
 the content is only documented through the compilable LilyPond files in each
 module's `usage` directories.
 
-
 ## Using this repository
 
 Before using the functionality provided by this package it has be installed
@@ -28,7 +29,3 @@ along with (at least) the [oll-core](https://github.com/openlilylib/oll-core) pa
 page](https://github.com/openlilylib/oll-core/wiki#installation). The direct
 link to the ZIP file is
 [here](https://github.com/openlilylib/oll-misc/archive/master.zip).
-
-Note that `snippets` does not provide any package or module options (yet), and
-as it doesn't contain top-level modules there is no practical use for the
-`\loadPackage \with { modules = ... } oll-misc` syntax.

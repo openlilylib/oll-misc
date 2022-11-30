@@ -23,18 +23,17 @@
 }
 
 % Define appearance
-#(cond ((not (defined? 'debug-grob-anchor-dotcolor))
-        (define debug-grob-anchor-dotcolor red)))
+#(define debug-grob-anchor-dotcolor
+  (if (defined? 'debug-grob-anchor-dotcolor)
+   debug-grob-anchor-dotcolor red))
 % Which grobs to print the dot to?
 % Possible values:
 % - 'all-grobs
 % - Name of a grob (as symbol)
 % - List of grob names
-#(cond ((not (defined? 'debug-grob-anchor-groblist))
-        ;(define debug-grob-anchor-groblist '(NoteHead Stem))))
-        ;(define debug-grob-anchor-groblist 'NoteHead )))
-        (define debug-grob-anchor-groblist 'all-grobs)))
-
+#(define debug-grob-anchor-groblist
+  (if (defined? 'debug-grob-anchor-groblist)
+   debug-grob-anchor-groblist 'all-grobs))
 
 #(define (add-dot)
    (lambda (grob)
@@ -79,12 +78,6 @@
               stencil
               dot-stil))))))
 
-% needs to be here for 2.16.2
-#(define-public (symbol-list-or-symbol? x)
-   (if (list? x)
-       (every symbol? x)
-       (symbol? x)))
-
 #(define (add-dot-to-grobs l)
    ;; possible values for l:
    ;;   'all-grobs (adds red-dots to all grobs, where possible)
@@ -116,20 +109,17 @@
                (loop (cdr x))))))))
 
 printAnchors =
-#(define-music-function (parser location s-or-l)(symbol-list-or-symbol?)
-   "
-       Will add a dot to the stencil's ref-point of the
- specified grob(s).
- Valid input for s-or-l:
+#(define-music-function
+  (s-or-l)
+  (symbol-list-or-symbol?)
+  "Will add a dot to the stencil's ref-point of the specified grob(s).
+   Valid input for s-or-l:
       @code{'all-grobs}, (adds red-dots to all grobs, where possible), this will
           naturally cause collisions
       a single grob-name, must be a symbol,
       a list of grob-names.
- To avoid bleeding-overs any context has to be initiated explicitly.
-"
-#{
-  \applyContext #(add-dot-to-grobs s-or-l)
-#})
+  To avoid bleeding-overs any context has to be initiated explicitly."
+  #{ \applyContext #(add-dot-to-grobs s-or-l) #})
 
 %% For single use:
 
@@ -159,4 +149,4 @@ printAnchors =
 
 %% Overriding grobs must be defined separately.
 %% Don't forget to specify the context if necessary.
-onceDotScript = \once \override Script #'after-line-breaking = #addDot
+onceDotScript = \once \override Script.after-line-breaking = #addDot

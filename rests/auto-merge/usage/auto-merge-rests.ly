@@ -1,4 +1,4 @@
-\version "2.18.2"
+\version "2.23.80"
 
 \include "oll-core/package.ily"
 \loadModule oll-misc.rests.auto-merge
@@ -29,7 +29,7 @@
   \new Staff \relative c'
   <<
     {
-      \compressFullBarRests
+      \compressEmptyMeasures
       c4 r r2 |
       R1 |
       r2 r4 r8 r16 r32 r |
