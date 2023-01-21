@@ -9,8 +9,9 @@ The first one is a standard lilypond-context-property, which is used to set inst
 So the following displays a C major scale, which sounds like a B flat major scale, if played by an instrument tuned in B flat, like trumpet.
 
 ```
-\version "2.18.2"
-\include "editorial-tools/auto-transpose/definitions.ily"
+\version "2.20.0"
+\include "oll-core/package.ily"
+\loadModule oll-misc.pitch.auto-transpose
 
 \new Staff \with {
  \autoTranspose
@@ -21,7 +22,11 @@ So the following displays a C major scale, which sounds like a B flat major scal
 }
 ```
 
-If the instrument is switched, the auto-transpose will follow.
+If the instrument is switched, the auto-transpose will follow, and the key signature will be reprinted automatically. The inserted key signatures are printed by a separate engraver.
+
+Known issue:
+
+* If a key change happens at the same moment as a transposition change, printing the correct key signature depends on the order in which the Lilypond commands are written. See the examples in auto-transpose-keys-1.ly and auto-transpose-keys-2.ly for details.
 
 There are some TODOs:
 
@@ -31,5 +36,5 @@ There are some TODOs:
 	2. transpose from concert to instrument pitch
 	3. transpose from instrument to concert pitch
     This might also be an initial parameter for the engraver, so we needn't define extra context-properties
-* TBC
+* Improve the key signature behavior when key changes happen simultaneously with transposition changes. This may not be possible without a patch to Lilypond itself.
 
