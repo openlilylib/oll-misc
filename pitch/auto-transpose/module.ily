@@ -30,7 +30,8 @@
    (set! all-translation-properties (cons symbol all-translation-properties))
    symbol)
 % add context properties descriptions
-%   transpose-direction
+
+#(translator-property-description 'insertKeySignatures boolean? "When #t (default) autotranspose will insert key signatures. Set to #f to turn off key signature inserts.")
 #(translator-property-description 
   'transposeDirection boolean-or-symbol? 
   "Auto-transpose setting. Valid options are 'concert-to-pitch (default – concert pitch input, transposed output), 'pitch-to-concert (transposed input, concert pitch output), and #f to disable autotranspose.")
@@ -91,30 +92,31 @@ autoTransposeEngraver =
          (event-cache #f))
      
      (define (insert-key)
-       (let* ((keysig (complete-keysig (ly:context-property context 'keyAlterations)))
-              (tonic (ly:context-property context 'tonic))
-              (transp (ly:context-property context 'instrumentTransposition))
-              (keysig-music (make-music 'KeyChangeEvent
-                              'pitch-alist keysig
-                              'tonic tonic
-                              'length (ly:make-moment 0)
-                              'auto-transpose (which-transp context lasttransp))))
-         (if (not (equal? transp lasttransp))
-             (let ((new-key (ly:music-deep-copy keysig-music)))
-               (cond-transp context new-key)
-               (if (not (equal? (ly:music-property keysig-music 'pitch-alist) ; don't reprint key if only 8ve change
-                                (ly:music-property new-key 'pitch-alist)))
-                   (let ((key-event (ly:make-stream-event
-                                     (ly:make-event-class 'key-change-event)
-                                     (ly:music-mutable-properties new-key))))
-                     (ly:message "Transposition changed. Inserting key signature in measure ~A."
-                       (ly:context-property context 'currentBarNumber))
-                     (ly:event-set-property! key-event 'music-cause new-key)
-                     (ly:event-set-property! key-event 'pitch-alist 
-                       (order-keysig context (ly:event-property key-event 'pitch-alist))) ; Fixing the order might not be needed here
-                     (ly:broadcast (ly:context-event-source context) key-event)
-                     )))
-             (set! lasttransp transp))))
+       (if (ly:context-property context 'insertKeySignatures #t)
+           (let* ((keysig (complete-keysig (ly:context-property context 'keyAlterations)))
+                  (tonic (ly:context-property context 'tonic))
+                  (transp (ly:context-property context 'instrumentTransposition))
+                  (keysig-music (make-music 'KeyChangeEvent
+                                            'pitch-alist keysig
+                                            'tonic tonic
+                                            'length (ly:make-moment 0)
+                                            'auto-transpose (which-transp context lasttransp))))
+             (if (not (equal? transp lasttransp))
+                 (let ((new-key (ly:music-deep-copy keysig-music)))
+                   (cond-transp context new-key)
+                   (if (not (equal? (ly:music-property keysig-music 'pitch-alist) ; don't reprint key if only 8ve change
+                                    (ly:music-property new-key 'pitch-alist)))
+                       (let ((key-event (ly:make-stream-event
+                                         (ly:make-event-class 'key-change-event)
+                                         (ly:music-mutable-properties new-key))))
+                         (ly:message "Transposition changed. Inserting key signature in measure ~A."
+                                     (ly:context-property context 'currentBarNumber))
+                         (ly:event-set-property! key-event 'music-cause new-key)
+                         (ly:event-set-property! key-event 'pitch-alist
+                                                 (order-keysig context (ly:event-property key-event 'pitch-alist))) ; Fixing the order might not be needed here
+                         (ly:broadcast (ly:context-event-source context) key-event)
+                         )))
+                 (set! lasttransp transp)))))
      
      
      (make-engraver

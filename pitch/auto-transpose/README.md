@@ -23,6 +23,8 @@ So the following displays a C major scale, which sounds like a B flat major scal
 
 If the instrument is switched, the auto-transpose will follow, and the key signature will be reprinted automatically.
 
+A third context property `insertKeySignatures` is available to turn off the automatically inserted key signatures. Explicit key changes will still be transposed.
+
 Known issue:
 
 * If a key change happens at the same moment as a transposition change, a warning may be triggered ``warning: conflict with event: `key-change-event'``. These can be safely ignored.
