@@ -31,7 +31,10 @@
    symbol)
 % add context properties descriptions
 
-#(translator-property-description 'insertKeySignatures boolean? "When #t (default) autotranspose will insert key signatures. Set to #f to turn off key signature inserts.")
+#(translator-property-description 
+  'autoInsertKeySignatures boolean? 
+  "When #t (default) autotranspose will insert key signatures. Set to #f to turn off key signature inserts.")
+
 #(translator-property-description 
   'transposeDirection boolean-or-symbol? 
   "Auto-transpose setting. Valid options are 'concert-to-pitch (default – concert pitch input, transposed output), 'pitch-to-concert (transposed input, concert pitch output), and #f to disable autotranspose.")
@@ -92,7 +95,7 @@ autoTransposeEngraver =
          (event-cache #f))
      
      (define (insert-key)
-       (if (ly:context-property context 'insertKeySignatures #t)
+       (if (ly:context-property context 'autoInsertKeySignatures #t)
            (let* ((keysig (complete-keysig (ly:context-property context 'keyAlterations)))
                   (tonic (ly:context-property context 'tonic))
                   (transp (ly:context-property context 'instrumentTransposition))

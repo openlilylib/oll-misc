@@ -1,11 +1,6 @@
-The auto-transpose engraver can be used to automatically transpose music according to the instrument transposition. The engraver has to know, if the music it finds in this context is in concert- or in instrument-pitch. Then it can use the `instrumentTransposition`, which is set by the `\transposition` command, to transpose the music as necessary.
+The auto-transpose engraver can be used to automatically transpose music either from concert pitch to instrument pitch (default), or vica versa.
 
-The engraver looks for two context-properties:
-1. instrumentTransposition
-2. transposeDirection
-
-The first one is a standard lilypond-context-property, which is used to set instrument transposition for MIDI-output. So, if you use for example `\transposition bes` -- e.g. trumpet or clarinet -- MIDI-output will sound one note lower. The other context-property is used to set if the music is provided in concert-pitch and printed in instrument pitch, or vica versa. If the music is given in concert pitch and shall be printed in instrument pitch, the engraver transposes it accordingly. `\autoTranspose` provides a context-mod which consists the engraver and sets transposeDirection to display concert-pitched music in instrument pitch.
-So the following displays a C major scale, which sounds like a B flat major scale, if played by an instrument tuned in B flat, like trumpet.
+For example, this snippet is a B-flat major scale written in Lilypond at concert pitch, but will produce sheet music transposed for B-flat clarinet or trumpet:
 
 ```
 \version "2.24.0"
@@ -21,15 +16,49 @@ So the following displays a C major scale, which sounds like a B flat major scal
 }
 ```
 
-If the instrument is switched, the auto-transpose will follow, and the key signature will be reprinted automatically.
+The engraver looks for three context-properties:
 
-A third context property `insertKeySignatures` is available to turn off the automatically inserted key signatures. Explicit key changes will still be transposed.
+1. `instrumentTransposition`
+2. `transposeDirection`
+3. `autoInsertKeySignatures`
 
-Known issue:
+`instrumentTransposition` is a standard Lilypond context property, set by the `\transposition` command. Lilypond uses it to output correct MIDI pitch when music is entered at instrument pitch. Auto-transpose engraver uses this property to transpose the printed music.
+
+If `transposeDirection` is set to `'concert-to-pitch`, music entered in concert pitch will be printed at instrument pitch according to `instrumentTransposition`. This is the default setting.
+
+If `transposeDirection` is set to `'pitch-to-concert` music entered at instrument pitch (again, according to `instrumentTransposition`) will be printed at concert pitch.
+
+For example, this snippet is a concert B-flat major scale entered into Lilypond at instrument pitch for a B-flat clarinet or trumpet (i.e. as a C major scale). The output sheet music will be a B-flat major scale written in concert pitch.
+
+```
+\new Staff \with {
+ \consists \autoTransposeEngraver
+  transposeDirection = #'pitch-to-concert
+} \relative c'' {
+   \transposition bes
+   \key c \major
+   c4 b a g f e d c
+}
+```
+
+If `transposeDirection` is set to `#f`, no automatic transposition will occur.
+
+If `instrumentTransposition` changes, as when a player switches instruments, auto-transpose will follow. By default, key signatures will be reprinted automatically whenever `instrumentTransposition` changes.
+
+Automatically inserted key signatures can be turned off by setting `autoInsertKeySignatures` to `#f`. This behavior is equivalent to the old version of auto-transpose.
+
+A context-mod `\autoTranspose` is provided, which enables the default behavior, equivalent to:
+
+```
+\with {
+  \consists \autoTransposeEngraver
+  transposeDirection = #'concert-to-pitch
+  autoInsertKeySignatures = ##t
+}
+```
+
+Known issues:
 
 * If a key change happens at the same moment as a transposition change, a warning may be triggered ``warning: conflict with event: `key-change-event'``. These can be safely ignored.
-
-There are some TODOs:
-
-* If the music is given in instrument pitch and shall be displayed, the `instrumentTransposition` property still has to be set, but that leads to incorrect MIDI-pitch.
+* If `transposeDirection` is set to `'pitch-to-concert` (music is entered in instrument pitch and displayed at concert pitch), MIDI output is at the incorrect pitch. Currently the easiest way around this is to use a separate `\score` block for MIDI output, and omit auto-transpose from it.
 

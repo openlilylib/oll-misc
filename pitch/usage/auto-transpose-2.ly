@@ -8,7 +8,7 @@
 % some music to insert into example
 bach = \relative c'' { b a c h }
 
-% add two transposing instrument-definitions
+% add transposing instrument-definitions
 \addInstrumentDefinition #"eb-clarinet"
   #`((instrumentTransposition . ,(ly:make-pitch 0 2 -1/2))
      (shortInstrumentName . "Es-Kl")
