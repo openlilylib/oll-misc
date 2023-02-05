@@ -1,12 +1,12 @@
-\version "2.19.7"
+\version "2.24.0"
 
 \header {
   snippet-title = "auto-transpose"
-  snippet-author = "Jan-Peter Voigt"
+  snippet-author = "Jan-Peter Voigt, Saul James Tobin"
   snippet-description = \markup {
     \wordwrap {
-      This engraver transposes music accordingly to 'instrumentTransposition'
-      and 'music-concert-pitch' plus 'print-concert-pitch'.
+      This engraver transposes music according to 'instrumentTransposition'
+      and 'transpositionDirection' and prints key signatures whenever the transposition changes.
       The example is working from concert-pitch to instrument-pitch, but MIDI is not right in the other direction. (TODO)
     }
   }
@@ -30,82 +30,160 @@
    (set! all-translation-properties (cons symbol all-translation-properties))
    symbol)
 % add context properties descriptions
-%   music-concert-pitch
-%   print-concert-pitch
-#(translator-property-description 'music-concert-pitch boolean? "music is in concert pitch")
-#(translator-property-description 'print-concert-pitch boolean? "print it in concert pitch")
 
-% engraver to automatically transpose music
-autoTransposeEngraver =
-#(lambda (context)
-   (let ((base (ly:make-pitch 0 0 0)) ; pitch c'
-          (lasttransp (ly:context-property context 'instrumentTransposition))) ; last instrument transposition
-     (define (cond-transp engraver music)
-       (let ((mcp (ly:context-property context 'music-concert-pitch)) ; music is in concert-pitch t/f
-              (pcp (ly:context-property context 'print-concert-pitch)) ; print it in concert-pitch t/f
-              (transp (ly:context-property context 'instrumentTransposition)) ; instrument transposition
-              (keysig (ly:context-property context 'keyAlterations)) ; key-signature
-              (tonic (ly:context-property context 'tonic))) ; key-signature tonic
+#(translator-property-description 
+  'autoTransposeKeySignatures boolean-or-symbol? 
+  "Valid options: 'insert-and-transpose, 'transpose-only, and #f")
 
-         (define (do-transp m)
-           (let ((ap (ly:music-property m 'auto-transpose))
-                 (tp
-                  (cond
-                   ((and mcp (not pcp) (ly:pitch? transp))
-                    (ly:pitch-diff base transp))
-                   ((and (not mcp) pcp (ly:pitch? transp))
-                    transp)
-                   (else #f)))
-                 )
-             (if (ly:pitch? tp)
-                 (cond
-                  ((and (ly:pitch? ap)(not (equal? ap tp)))
-                   (ly:music-transpose m (ly:pitch-diff tp ap)))
-                  ((not (ly:pitch? ap))
-                   (ly:music-transpose m tp))
-                  )
-                 (if (ly:pitch? ap)
-                     (begin
-                     (ly:music-transpose m (ly:pitch-diff base tp))
-                     ))) ; TODO
-             (ly:music-set-property! m 'auto-transpose tp)
-             ))
+#(translator-property-description 
+  'transposeDirection boolean-or-symbol? 
+  "Auto-transpose setting. Valid options are 'concert-to-pitch (default – concert pitch input, transposed output), 'pitch-to-concert (transposed input, concert pitch output), and #f to disable autotranspose.")
 
-         ; TODO: if instrument transposition changed, produce key signature
-         (if (not (equal? transp lasttransp))
-             (let ((key-sig (make-music 'KeyChangeEvent 'pitch-alist keysig 'tonic tonic)))
-               (ly:message "is there a key signature in measure ~A? Transposition changed!" (ly:context-property context 'currentBarNumber))
-               ;(ly:broadcast (ly:context-event-source context)
-               ;  (ly:make-stream-event 'key-change-event `((music-cause . ,key-sig)) ))
-               ))
-         (set! lasttransp transp)
+#(define (which-transp context transp)
+   (let ((transpose-direction (ly:context-property context 'transposeDirection 'concert-to-pitch)))
+     (cond
+      ((and (equal? transpose-direction 'concert-to-pitch) (ly:pitch? transp))
+       (ly:pitch-diff (ly:make-pitch 0 0 0) transp)) ; invert around middle c' for opposite semantics of Lilypond's default
+      ((and (equal? transpose-direction 'pitch-to-concert) (ly:pitch? transp))
+       transp) ; keep transposition as-is for semantics that match Lilypond's default
+      (else #f))))
 
-         ; execute transposition
-         (do-transp music)
+%  To Do: currently cond-transp is used for keysigs, but there are builtin scheme functions to transpose pitches and keysig alists.
+%  Maybe using them could avoid the need for complete-keysig and order-keysig helpers?
+%  Also cond-transp should return the transposed music expression.
+#(define (cond-transp context music)
+   (let ((transp (ly:context-property context 'instrumentTransposition))
+         (base (ly:make-pitch 0 0 0)))
+     (define (do-transp m)
+       (let ((ap (ly:music-property m 'auto-transpose))
+             (tp (which-transp context transp))
+             )
+         (if (ly:pitch? tp)
+             (cond
+              ((and (ly:pitch? ap)(not (equal? ap tp)))
+               (ly:music-transpose m (ly:pitch-diff tp ap)))
+              ((not (ly:pitch? ap))
+               (ly:music-transpose m tp))
+              )
+             (if (ly:pitch? ap)
+                 (begin
+                  (ly:music-transpose m (ly:pitch-diff base tp))
+                  ))) ; TODO
+         (ly:music-set-property! m 'auto-transpose tp)
          ))
-
-     ; create engraver
-     (make-engraver
-      (listeners
-       ; transpose note-event
-       ((note-event engraver event)
-        (cond-transp engraver (ly:event-property event 'music-cause)))
-       ; transpose key-signature
-       ((key-change-event engraver event)
-        (cond-transp engraver (ly:event-property event 'music-cause)))
-       )
-      )
+     ; execute transposition
+     (do-transp music)
      ))
 
+#(define (complete-keysig alterations)
+   (let ((cmaj '((0 . 0) (1 . 0) (2 . 0) (3 . 0) (4 . 0) (5 . 0) (6 . 0)))
+         (update (lambda (el sig) (assoc-set! sig (car el) (cdr el)))))
+     (fold update (copy-tree cmaj) alterations)))
+
+#(define (order-keysig context pitch-alist)
+   (let ((order (ly:context-property context 'keyAlterationOrder)))
+     (filter
+      (lambda (alt)
+        (any (lambda (el)
+               (equal? el alt))
+          pitch-alist))
+      order)))
+
+autoTransposeEngraver = 
+#(lambda (context)
+   (let ((lasttransp (ly:context-property context 'instrumentTransposition))
+         (event-cache #f))
+     
+     (define (insert-key)
+       (if (equal? 'insert-and-transpose 
+                   (ly:context-property context 'autoTransposeKeySignatures 'insert-and-transpose))
+           (let* ((keysig (complete-keysig (ly:context-property context 'keyAlterations)))
+                  (tonic (ly:context-property context 'tonic))
+                  (transp (ly:context-property context 'instrumentTransposition))
+                  (keysig-music (make-music 'KeyChangeEvent
+                                            'pitch-alist keysig
+                                            'tonic tonic
+                                            'length (ly:make-moment 0)
+                                            'auto-transpose (which-transp context lasttransp))))
+             (if (not (equal? transp lasttransp))
+                 (let ((new-key (ly:music-deep-copy keysig-music)))
+                   (cond-transp context new-key)
+                   (if (not (equal? (ly:music-property keysig-music 'pitch-alist) ; don't reprint key if only 8ve change
+                                    (ly:music-property new-key 'pitch-alist)))
+                       (let ((key-event (ly:make-stream-event
+                                         (ly:make-event-class 'key-change-event)
+                                         (ly:music-mutable-properties new-key))))
+                         (ly:message "Transposition changed. Inserting key signature in measure ~A."
+                                     (ly:context-property context 'currentBarNumber))
+                         (ly:event-set-property! key-event 'music-cause new-key)
+                         ; Fixing the order might not be needed here
+                         (ly:event-set-property! key-event 'pitch-alist
+                                                 (order-keysig context (ly:event-property key-event 'pitch-alist)))
+                         (ly:broadcast (ly:context-event-source context) key-event)
+                         )))
+                 (set! lasttransp transp)))))
+     
+     
+     (make-engraver
+      (listeners
+       ((rest-event engraver event)
+        ;if transposition changed, broadcast a key change event, then reset lasttransp
+        (insert-key)
+        )
+       
+       ((note-event engraver event)
+        ;if transposition changed, broadcast a key change event, then reset lasttransp
+        (insert-key)
+        ;transpose the note
+        (cond-transp context (ly:event-property event 'music-cause))
+        )
+       
+       ((key-change-event engraver event)
+        ; if no event already cached, or if 'autotranspose is not set, cache the event:
+        ; always register explicit key changes, 
+        ; but only register automatic keysig if there is no conflicting event
+        (if (not (ly:stream-event? event-cache))
+            (set! event-cache event)
+            (if (not (ly:event-property event 'auto-transpose #f))
+                (set! event-cache event)))
+        
+        ; if transposition changed, reset lasttransp 
+        ; (to suppress auto keysig when an explicit key change is already present)
+        (let ((transp (ly:context-property context 'instrumentTransposition)))
+         (if (not (equal? transp lasttransp))
+             (set! lasttransp transp)))
+        )
+       )
+      
+      ((pre-process-music engraver)
+       ; if an event is cached, transpose the tonic and pitch-alist, then set context properties
+       (if (and (ly:stream-event? event-cache)
+                (symbol? (ly:context-property context 'autoTransposeKeySignatures 'insert-and-transpose)))
+           (let ((key-music (ly:event-property event-cache 'music-cause)))
+             (cond-transp context key-music)
+             (let* ((full-alts (ly:music-property key-music 'pitch-alist))
+                    ; discard all the naturals
+                    (alts (filter
+                           (lambda (alt) (not (equal? 0 (cdr alt))))
+                           full-alts))
+                    ; fix the order of alterations
+                    (proper-alts (order-keysig context alts)))
+               ; Key_engraver reads from context properties NOT from the event itself when printing a keysig
+               ; So we can wait for all events to be heard, then fix the keysig to reflect the transposition
+               ; even if the key change was heard before the transposition change.
+               (ly:context-set-property! context 'keyAlterations proper-alts)
+               (ly:context-set-property! context 'tonic (ly:music-property key-music 'tonic)))))
+       )
+      
+      ((stop-translation-timestep engraver)
+        ;unset the event cache
+        (set! event-cache #f)
+       )
+      )))
+
 autoTranspose = \with {
-  % we have to ensure, the key-engraver acts after transposition is done
-  \remove "Key_engraver"
   \consists \autoTransposeEngraver
-  \consists "Key_engraver"
-  % if music and print are equal, do nothing
-  % else transpose according to transp (up or down)
-  music-concert-pitch = ##t
-  print-concert-pitch = ##f
+  transposeDirection = #'concert-to-pitch
   % TODO: if music is given in instrument-pitch, but shall be printed in concert-pitch,
   %   midi pitch is false - instrumentTransposition should be "turned off" for midi(?)
 }

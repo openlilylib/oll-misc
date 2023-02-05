@@ -1,4 +1,4 @@
-\version "2.23.80"
+\version "2.24.0"
 \include "deutsch.ly"
 
 \include "oll-core/package.ily"
@@ -8,7 +8,7 @@
 % some music to insert into example
 bach = \relative c'' { b a c h }
 
-% add two transposing instrument-definitions
+% add transposing instrument-definitions
 \addInstrumentDefinition #"eb-clarinet"
   #`((instrumentTransposition . ,(ly:make-pitch 0 2 -1/2))
      (shortInstrumentName . "Es-Kl")
@@ -28,7 +28,7 @@ bach = \relative c'' { b a c h }
      (midiInstrument . "clarinet"))
 
 \addInstrumentDefinition #"concert-pitch"
-  #`((instrumentTransposition . #f)
+  #`((instrumentTransposition . ,(ly:make-pitch 0 0 0))
      (shortInstrumentName . "C")
      (clefGlyph . "clefs.G")
      (middleCPosition . -6)
@@ -45,21 +45,19 @@ bach = \relative c'' { b a c h }
 \editionMod transp 5 0/4 switch.instrument.Staff.A \instrumentSwitch "concert-pitch"
 
 music = {
+  \key f \major
   \repeat unfold 3 \bach
   <>_\markup \tiny "repeat unfold c''"
   \repeat unfold 4 c''4
   <>_\markup \tiny "repeat unfold d''"
   \repeat unfold 4 d''
 }
-global = { \key f \major s1 \key f \major s1 \key f \major s1 }
+
 \score {
   \new Staff \with {
     \autoTranspose
     \editionID ##f switch.instrument
-  } \new Voice <<
-    \global
-    \music
-  >>
+  } \new Voice \music
   \layout {}
   \midi { \tempo 4=150 }
 }
