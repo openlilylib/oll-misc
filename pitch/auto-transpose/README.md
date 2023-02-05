@@ -8,11 +8,11 @@ For example, this snippet is a B-flat major scale written in Lilypond at concert
 \loadModule oll-misc.pitch.auto-transpose
 
 \new Staff \with {
- \autoTranspose
+  \autoTranspose
 } \relative c'' {
-   \transposition bes
-   \key bes \major
-   bes4 a g f ees d c bes
+  \transposition bes
+  \key bes \major
+  bes4 a g f ees d c bes
 }
 ```
 
@@ -20,7 +20,7 @@ The engraver looks for three context-properties:
 
 1. `instrumentTransposition`
 2. `transposeDirection`
-3. `autoInsertKeySignatures`
+3. `autoTransposeKeySignatures`
 
 `instrumentTransposition` is a standard Lilypond context property, set by the `\transposition` command. Lilypond uses it to output correct MIDI pitch when music is entered at instrument pitch. Auto-transpose engraver uses this property to transpose the printed music.
 
@@ -32,20 +32,38 @@ For example, this snippet is a concert B-flat major scale entered into Lilypond 
 
 ```
 \new Staff \with {
- \consists \autoTransposeEngraver
+  \consists \autoTransposeEngraver
   transposeDirection = #'pitch-to-concert
 } \relative c'' {
-   \transposition bes
-   \key c \major
-   c4 b a g f e d c
+  \transposition bes
+  \key c \major
+  c4 b a g f e d c
 }
 ```
 
 If `transposeDirection` is set to `#f`, no automatic transposition will occur.
 
-If `instrumentTransposition` changes, as when a player switches instruments, auto-transpose will follow. By default, key signatures will be reprinted automatically whenever `instrumentTransposition` changes.
+If `instrumentTransposition` changes, as when a player switches instruments, auto-transpose will follow. 
 
-Automatically inserted key signatures can be turned off by setting `autoInsertKeySignatures` to `#f`. This behavior is equivalent to the old version of auto-transpose.
+If `autoTransposeKeySignatures` is set to `'insert-and-transpose`, key signatures will be reprinted automatically whenever `instrumentTransposition` changes. This is the default.
+
+If `autoTransposeKeySignatures` is set to `'transpose-only`, key signatures will not be automatically inserted, but explicit key changes will still be transposed. This is similar to the old version of auto-transpose.
+
+If `autoTransposeKeySignatures` is set to `#f`, auto-transpose will ignore key signatures. Use this setting any time you would `\remove Key_engraver` or `\omit KeySignature`, such as for atonal passages or transposing instruments that traditionally do not use a key signature, such as orchestral horns. 
+
+In this example, the concert B-flat major scale is printed at instrument pitch for horn, with no key signature. Note that if `autoTransposeKeySignatures = ##f` had not been set, the B-flat accidental would not be printed due to auto-transpose behaving as if the key signature were present.
+
+```
+\new Staff \with {
+  \consists \autoTransposeEngraver
+  autoTransposeKeySignatures = ##f
+  \remove Key_engraver
+} \relative c'' {
+  \transposition f
+  \key bes \major
+  bes4 a g f ees d c bes
+}
+```
 
 A context-mod `\autoTranspose` is provided, which enables the default behavior, equivalent to:
 

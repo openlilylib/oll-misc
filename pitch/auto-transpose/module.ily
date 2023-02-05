@@ -32,8 +32,8 @@
 % add context properties descriptions
 
 #(translator-property-description 
-  'autoInsertKeySignatures boolean? 
-  "When #t (default) autotranspose will insert key signatures. Set to #f to turn off key signature inserts.")
+  'autoTransposeKeySignatures boolean-or-symbol? 
+  "Valid options: 'insert-and-transpose, 'transpose-only, and #f")
 
 #(translator-property-description 
   'transposeDirection boolean-or-symbol? 
@@ -95,7 +95,8 @@ autoTransposeEngraver =
          (event-cache #f))
      
      (define (insert-key)
-       (if (ly:context-property context 'autoInsertKeySignatures #t)
+       (if (equal? 'insert-and-transpose 
+                   (ly:context-property context 'autoTransposeKeySignatures 'insert-and-transpose))
            (let* ((keysig (complete-keysig (ly:context-property context 'keyAlterations)))
                   (tonic (ly:context-property context 'tonic))
                   (transp (ly:context-property context 'instrumentTransposition))
@@ -115,8 +116,9 @@ autoTransposeEngraver =
                          (ly:message "Transposition changed. Inserting key signature in measure ~A."
                                      (ly:context-property context 'currentBarNumber))
                          (ly:event-set-property! key-event 'music-cause new-key)
+                         ; Fixing the order might not be needed here
                          (ly:event-set-property! key-event 'pitch-alist
-                                                 (order-keysig context (ly:event-property key-event 'pitch-alist))) ; Fixing the order might not be needed here
+                                                 (order-keysig context (ly:event-property key-event 'pitch-alist)))
                          (ly:broadcast (ly:context-event-source context) key-event)
                          )))
                  (set! lasttransp transp)))))
@@ -155,7 +157,8 @@ autoTransposeEngraver =
       
       ((pre-process-music engraver)
        ; if an event is cached, transpose the tonic and pitch-alist, then set context properties
-       (if (ly:stream-event? event-cache)
+       (if (and (ly:stream-event? event-cache)
+                (symbol? (ly:context-property context 'autoTransposeKeySignatures 'insert-and-transpose)))
            (let ((key-music (ly:event-property event-cache 'music-cause)))
              (cond-transp context key-music)
              (let* ((full-alts (ly:music-property key-music 'pitch-alist))
