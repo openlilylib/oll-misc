@@ -25,7 +25,7 @@
        (throw 'init-format-error))
 
    (if (not (equal? #f (object-property symbol 'translation-doc)))
-       (ly:error (G_ "symbol ~S redefined" symbol)))
+       (ly:error (G_ "symbol ~S redefined") symbol))
 
    (set-object-property! symbol 'translation-type? type?)
    (set-object-property! symbol 'translation-doc description)
