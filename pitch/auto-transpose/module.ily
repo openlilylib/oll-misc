@@ -14,6 +14,8 @@
   status = "unknown"
 }
 
+#(use-modules (ice-9 copy-tree))
+
 % taken from "scm/define-context-properties.scm"
 #(define (translator-property-description symbol type? description)
    (if (not (and
