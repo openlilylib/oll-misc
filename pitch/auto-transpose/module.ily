@@ -14,6 +14,8 @@
   status = "unknown"
 }
 
+#(use-modules (ice-9 copy-tree))
+
 % taken from "scm/define-context-properties.scm"
 #(define (translator-property-description symbol type? description)
    (if (not (and
@@ -23,7 +25,7 @@
        (throw 'init-format-error))
 
    (if (not (equal? #f (object-property symbol 'translation-doc)))
-       (ly:error (_ "symbol ~S redefined" symbol)))
+       (ly:error (G_ "symbol ~S redefined") symbol))
 
    (set-object-property! symbol 'translation-type? type?)
    (set-object-property! symbol 'translation-doc description)
@@ -126,7 +128,12 @@ autoTransposeEngraver =
      
      (make-engraver
       (listeners
-       ((rest-event engraver event)
+       ((general-rest-event engraver event)
+        ;if transposition changed, broadcast a key change event, then reset lasttransp
+        (insert-key)
+        )
+       
+       ((skip-event engraver event)
         ;if transposition changed, broadcast a key change event, then reset lasttransp
         (insert-key)
         )
